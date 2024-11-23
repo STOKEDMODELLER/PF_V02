@@ -1,0 +1,3 @@
+[provider]
+cluster = "https://api.devnet.solana.com"
+wallet = "/home/box/.config/solana/id.json"

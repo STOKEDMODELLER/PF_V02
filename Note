@@ -1,0 +1,68 @@
+box@DESKTOP-FU80JH1:/mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto$ solana config set --url https://api.devnet.solana.com
+Config File: /home/box/.config/solana/cli/config.yml
+RPC URL: https://api.devnet.solana.com
+WebSocket URL: wss://api.devnet.solana.com/ (computed)
+Keypair Path: /home/box/.config/solana/id.json
+Commitment: confirmed
+box@DESKTOP-FU80JH1:/mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto$ solana config get
+Config File: /home/box/.config/solana/cli/config.yml
+RPC URL: https://api.devnet.solana.com
+WebSocket URL: wss://api.devnet.solana.com/ (computed)
+Keypair Path: /home/box/.config/solana/id.json
+Commitment: confirmed
+box@DESKTOP-FU80JH1:/mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto$ solana-keygen new
+Generating a new keypair
+
+For added security, enter a BIP39 passphrase
+
+NOTE! This passphrase improves security of the recovery seed phrase NOT the
+keypair file itself, which is stored as insecure plain text
+
+BIP39 Passphrase (empty for none):
+
+Wrote new keypair to /home/box/.config/solana/id.json
+=======================================================================
+pubkey: 88Exr8VmkzUAwKoyk1Z4Lyh4CaMyiLNoxmoUxqZJAJq8
+=======================================================================
+Save this seed phrase and your BIP39 passphrase to recover your new keypair:
+clean arch negative live quantum boy cat hurdle valve text sure exhibit
+=======================================================================
+box@DESKTOP-FU80JH1:/mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto$ solana airdrop 2
+Requesting airdrop of 2 SOL
+
+Signature: 3UqFjDh5kKC4aYvJGmS8EpxRvw2BZqmcu2S2ByhxkxRtM2srZ2UgQW7QKqxRzHng6BtsV6Gu6fFjWHdmiWypDnYc
+
+2 SOL
+
+
+box@DESKTOP-FU80JH1:/mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/solana_amm$ anchor deploy --provider.cluster https://api.devnet.solana.com
+Deploying cluster: https://api.devnet.solana.com
+Upgrade authority: /home/box/.config/solana/id.json
+Deploying program "solana_amm"...
+Program path: /mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/solana_amm/target/deploy/solana_amm.so...
+Program Id: 8oQFwDXMMW1Chuu5vmQHAfYfxXBYYLtW5rxGVGxUmMSj
+
+Signature: 3PZHzf59GEh9MdwquXpRR8VjpXNZ1jEp24i42cc9Ejh7U5Ce2NQGNU9FvXjaE7BUtHgUqutcY3DBWzqKTJL9ycfe
+
+Deploy success
+
+
+
+
+
+
+
+
+
+
+
+box@DESKTOP-FU80JH1:/mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/solana_amm$ anchor deploy
+Deploying cluster: https://api.devnet.solana.com
+Upgrade authority: /home/box/.config/solana/id.json
+Deploying program "solana_amm"...
+Program path: /mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/solana_amm/target/deploy/solana_amm.so...
+Program Id: 5dctRN4vE4AFJY6VrT2cMj8sTvSwMnDwuJEwvTD7HWjW
+
+Signature: 2w5dvGuk1vSSB47BtverZW92naWrCofU6M6bwaQqBiGNqgkEy3tjsJC8AUAXYBntwnfod3SST34EjAs774EyXw2e
+
+Deploy success
