@@ -1,0 +1,525 @@
+---- Directory: /mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/solana-amm-v02/app/src/styles ----
+---- File: Banner.css ----
+.banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    color: #fff;
+    font-size: 14px;
+    border-radius: 4px;
+    margin: 10px 0;
+  }
+  
+  .banner-info {
+    background-color: #2196f3;
+  }
+  
+  .banner-warning {
+    background-color: #ff9800;
+  }
+  
+  .banner-error {
+    background-color: #f44336;
+  }
+  
+  .banner-success {
+    background-color: #4caf50;
+  }
+  
+  .banner-close {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+
+
+---- Directory: /mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/solana-amm-v02/app/src/styles ----
+---- File: Content.module.css ----
+/* Center the container */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Styling for the card */
+.card {
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Title styling */
+.title {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Input group styling */
+.inputGroup {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* Label styling */
+.label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Select dropdown styling */
+.select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* Input field styling */
+.input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+/* Button styling */
+.button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+  transform: scale(1.02);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+
+---- Directory: /mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/solana-amm-v02/app/src/styles ----
+---- File: Footer.module.css ----
+.footer {
+    text-align: center;
+    padding: 16px;
+    background: #1a1a1a;
+    color: white;
+  }
+  
+
+
+---- Directory: /mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/solana-amm-v02/app/src/styles ----
+---- File: Header.module.css ----
+/* General Header Styling */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.6);
+  border-bottom: 1px solid #1e293b;
+  color: white;
+  font-family: Arial, sans-serif;
+  position: relative;
+  z-index: 100;
+}
+
+/* Logo */
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  background: linear-gradient(145deg, #4ade80, #22c55e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+/* Hamburger Menu */
+.hamburger {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 24px;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+  transition: transform 0.3s;
+}
+
+/* Dropdown Menu */
+.menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #1e293b;
+  border-radius: 8px;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.6);
+  width: 200px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s, transform 0.3s;
+  pointer-events: none;
+}
+
+.menuOpen {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.menu button,
+.menu span {
+  display: block;
+  text-align: left;
+  padding: 10px 16px;
+  width: 100%;
+  color: white;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.menu button:hover,
+.menu span:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.menu .walletAddress {
+  font-size: 0.85rem;
+  font-family: monospace;
+}
+
+/* Buttons */
+.button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.connectButton {
+  background: linear-gradient(145deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.connectButton:hover {
+  background: linear-gradient(145deg, #2563eb, #3b82f6);
+  transform: scale(1.05);
+}
+
+.disconnectButton {
+  background: linear-gradient(145deg, #22c55e, #4ade80);
+  color: white;
+}
+
+.disconnectButton:hover {
+  background: linear-gradient(145deg, #4ade80, #22c55e);
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
+  .hamburger {
+    display: none;
+  }
+
+  .menu {
+    position: static;
+    background: none;
+    opacity: 1;
+    transform: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    pointer-events: all;
+  }
+
+  .menu button,
+  .menu span {
+    background: none;
+    text-align: center;
+    padding: 0;
+  }
+}
+
+
+
+---- Directory: /mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/solana-amm-v02/app/src/styles ----
+---- File: SwapComponent.module.css ----
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #ffffff; /* White background for the page */
+    margin: 0;
+    padding: 0;
+}
+
+.card {
+    background-color: #2c2c2c; /* Dark card background */
+    color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 350px;
+    max-width: 90%;
+    text-align: center;
+}
+
+.title {
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.inputGroup {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.select,
+.input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background-color: #4caf50; /* Button green background */
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.button:hover {
+    background-color: #45a049; /* Slightly darker green on hover */
+    transform: scale(1.05); /* Button hover effect */
+}
+
+
+
+---- Directory: /mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/solana-amm-v02/app/src/styles ----
+---- File: WalletSelectorModal.module.css ----
+/* Overlay Background */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Slightly darker for better contrast */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Card */
+.modal {
+  background: linear-gradient(135deg, #1a202c, #2d3748); /* Elegant dark gradient */
+  border-radius: 16px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.4); /* More pronounced shadow */
+  width: 90%;
+  max-width: 420px;
+  padding: 24px;
+  animation: fadeIn 0.3s ease-in-out;
+  color: #f0f0f0;
+  font-family: "Arial", sans-serif;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 28px;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.closeButton:hover {
+  transform: scale(1.2);
+  color: #e53e3e; /* Subtle red hover effect */
+}
+
+/* Wallet Actions */
+.walletActions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.walletButton {
+  width: 100%;
+  max-width: 300px;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #4caf50, #81c784); /* Green gradient for connect */
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.walletButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3); /* Hover glow effect */
+}
+
+.disconnectButton {
+  width: 100%;
+  max-width: 300px;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #f44336, #e57373); /* Red gradient for disconnect */
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.disconnectButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(244, 67, 54, 0.3); /* Hover glow effect */
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 14px;
+  color: #a0aec0; /* Muted text colour */
+}
+
+.learnMore {
+  color: #63b3ed; /* Light blue for learn more link */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.learnMore:hover {
+  text-decoration: underline;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+---- Directory: /mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/solana-amm-v02/app/src/styles ----
+---- File: global.css ----
+/* Background with animation */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #202833, #0d0f13);
+    background-size: 400% 400%;
+    animation: gradientShift 12s infinite;
+    color: white;
+  }
+  
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  /* General Utilities */
+  :root {
+    --primary-gradient: linear-gradient(90deg, #6a00ff, #00d4ff);
+    --button-hover: rgba(255, 255, 255, 0.2);
+    --box-shadow: 0px 4px 12px rgba(0, 212, 255, 0.5);
+  }
+  
+  /* Reset for elements */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+
+

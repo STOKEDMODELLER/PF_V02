@@ -1,0 +1,136 @@
+/* Overlay Background */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Slightly darker for better contrast */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Card */
+.modal {
+  background: linear-gradient(135deg, #1a202c, #2d3748); /* Elegant dark gradient */
+  border-radius: 16px;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.4); /* More pronounced shadow */
+  width: 90%;
+  max-width: 420px;
+  padding: 24px;
+  animation: fadeIn 0.3s ease-in-out;
+  color: #f0f0f0;
+  font-family: "Arial", sans-serif;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  color: #ffffff;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 28px;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.closeButton:hover {
+  transform: scale(1.2);
+  color: #e53e3e; /* Subtle red hover effect */
+}
+
+/* Wallet Actions */
+.walletActions {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.walletButton {
+  width: 100%;
+  max-width: 300px;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #4caf50, #81c784); /* Green gradient for connect */
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.walletButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3); /* Hover glow effect */
+}
+
+.disconnectButton {
+  width: 100%;
+  max-width: 300px;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #f44336, #e57373); /* Red gradient for disconnect */
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.disconnectButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(244, 67, 54, 0.3); /* Hover glow effect */
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 24px;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 14px;
+  color: #a0aec0; /* Muted text colour */
+}
+
+.learnMore {
+  color: #63b3ed; /* Light blue for learn more link */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.learnMore:hover {
+  text-decoration: underline;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

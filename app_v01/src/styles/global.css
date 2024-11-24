@@ -1,0 +1,20 @@
+:root {
+  /* Global Color Themes */
+  --primary-color: #6a00ff;
+  --secondary-color: #00d4ff;
+
+  /* Shared Gradients */
+  --primary-gradient: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+
+  /* General Shadows */
+  --box-shadow: 0px 4px 12px rgba(0, 212, 255, 0.5);
+
+  /* Header-Specific Variables */
+  --header-bg: linear-gradient(135deg, #1e293b, #0f172a);
+  --header-logo-gradient: linear-gradient(145deg, #4ade80, #22c55e);
+
+  /* Swap Component Variables */
+  --swap-bg: #ffffff;
+  --swap-card-bg: #2c2c2c;
+  --swap-button-bg: #4caf50;
+}
