@@ -28,6 +28,21 @@
   color: #61dafb;
 }
 
+/* Add this to your main CSS file, e.g., App.css */
+.bg-pattern {
+  background-image: url('https://www.toptal.com/designers/subtlepatterns/uploads/double-bubble.png');
+  background-repeat: repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+/* For mobile bottom navigation bar */
+@media (max-width: 1024px) {
+  .mobile-nav-bar {
+    display: flex; /* This makes sure it is visible only on mobile */
+  }
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

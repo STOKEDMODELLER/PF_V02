@@ -1,0 +1,22 @@
+Wrote new keypair to ./.config/solana/id.json
+=====================================================================
+pubkey: FravZXkzVgrxDKcP6ixH2q1QTvW8GpUj8CBwhbfvuYa
+=====================================================================
+Save this seed phrase and your BIP39 passphrase to recover your new keypair:
+dirt clerk join similar quiz dwarf ritual steel cover mask foot sport
+=====================================================================
+
+box@DESKTOP-FU80JH1:/mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/Solana/solana-amm-v02$ solana config set --keypair ./.config/solana/id.json
+Config File: /home/box/.config/solana/cli/config.yml
+RPC URL: https://api.devnet.solana.com
+WebSocket URL: wss://api.devnet.solana.com/ (computed)
+Keypair Path: ./.config/solana/id.json
+Commitment: confirmed
+
+
+
+solana balance --keypair ./.config/solana/id.json
+
+
+
+spl-token accounts --url https://api.devnet.solana.com
