@@ -1,0 +1,30 @@
+
+box@DESKTOP-FU80JH1:/mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/Solana/solana-amm-v02$ solana-keygen new --outfile ~/.config/solana/id.json
+Generating a new keypair
+
+For added security, enter a BIP39 passphrase
+
+NOTE! This passphrase improves security of the recovery seed phrase NOT the
+keypair file itself, which is stored as insecure plain text
+
+BIP39 Passphrase (empty for none):
+
+Wrote new keypair to /home/box/.config/solana/id.json
+==========================================================================
+pubkey: 5i1wU6CMdTsuZ58ge7ERtVpCutLcaF23nHB9pcJKriWK
+==========================================================================
+Save this seed phrase and your BIP39 passphrase to recover your new keypair:
+grief panic pony congress welcome amused name click eager doll stool cruel
+==========================================================================
+
+
+box@DESKTOP-FU80JH1:/mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/Solana/solana-amm-v02$ anchor deploy
+Deploying cluster: https://api.devnet.solana.com   
+Upgrade authority: /home/box/.config/solana/id.json
+Deploying program "solana_amm"...
+Program path: /mnt/c/Users/921755/OneDrive - Royal HaskoningDHV/Desktop/cripto/Solana/solana-amm-v02/target/deploy/solana_amm.so...
+Program Id: 4XhFa2aZZh8L4ejKA44fy2RNTu1b4JRTChdoCp1VnonN
+
+Signature: 2DG1RQXSo7uXG978vwL3XHoSg9wNgzfY6cChW2qVYJc53j9w9mRYWZDwA8hy9UNrrQ9EuDXxmEJSoYeR3WjPjmQq
+
+Deploy success

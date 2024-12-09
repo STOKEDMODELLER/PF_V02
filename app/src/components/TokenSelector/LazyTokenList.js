@@ -6,7 +6,7 @@ import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import TokenRow from "./TokenRow";
 
 const PAGE_SIZE = 20;
-const RPC_URL = "https://api.devnet.solana.com";
+const RPC_URL = process.env.REACT_APP_MAIN_RPC;
 
 const LazyTokenList = ({ onSelectToken, searchTerm }) => {
   const { connected, publicKey } = useWallet();
@@ -25,7 +25,6 @@ const LazyTokenList = ({ onSelectToken, searchTerm }) => {
       return;
     }
 
-    console.log("Fetching balances for wallet:", publicKey.toString());
     try {
       const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
         publicKey,
@@ -37,14 +36,9 @@ const LazyTokenList = ({ onSelectToken, searchTerm }) => {
         const { mint, tokenAmount } = account.data.parsed.info;
         updatedBalances[mint] = tokenAmount.uiAmount || 0;
 
-        console.log("Fetched token account:", {
-          mint,
-          balance: tokenAmount.uiAmount,
-        });
       });
 
       setBalances(updatedBalances);
-      console.log("Updated balances:", updatedBalances);
     } catch (error) {
       console.error("Error fetching balances:", error);
     }
@@ -52,7 +46,6 @@ const LazyTokenList = ({ onSelectToken, searchTerm }) => {
 
   // Fetch tokens (dummy data)
   const loadTokens = async () => {
-    console.log("Loading token data...");
     try {
       const response = await fetch("tokens_dummy_data.json");
       const data = await response.json();
@@ -61,15 +54,12 @@ const LazyTokenList = ({ onSelectToken, searchTerm }) => {
         setDisplayedTokens(data.data.slice(0, PAGE_SIZE));
         setPage(1);
         setHasMore(data.data.length > PAGE_SIZE);
-        console.log("Tokens loaded:", data.data);
       } else {
-        console.error("Token list is not an array.");
         setTokens([]);
         setDisplayedTokens([]);
         setHasMore(false);
       }
     } catch (error) {
-      console.error("Failed to load tokens:", error);
     }
   };
 

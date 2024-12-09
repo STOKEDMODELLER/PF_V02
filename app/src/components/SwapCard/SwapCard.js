@@ -6,11 +6,12 @@ import TokenSelector from "../TokenSelector/TokenSelector";
 import AdvancedSettings from "../AdvancedSettings/AdvancedSettings";
 import ConnectButton from "../ConnectButton";
 import GlobalModal from "../Global/GlobalModal";
+import LiquidityInfo from "../LiquidityInfo/LiquidityInfo";
 
 const SwapCard = ({ onSwap }) => {
   const { connected } = useWallet();
   const [tokens, setTokens] = useState([]);
-  const [connection] = useState(() => new Connection("https://api.devnet.solana.com"));
+  const [connection] = useState(() => new Connection(process.env.REACT_APP_MAIN_RPC));
   const [fromToken, setFromToken] = useState({ symbol: "SOL", image: "https://via.placeholder.com/40" });
   const [toToken, setToToken] = useState({ symbol: "USDC", image: "https://via.placeholder.com/40" });
   const [fromAmount, setFromAmount] = useState("");
@@ -142,6 +143,15 @@ const SwapCard = ({ onSwap }) => {
           )}
         </div>
       </div>
+
+      <LiquidityInfo
+        connection={connection}
+        selectedTokens={{
+            fromToken: fromToken.symbol,
+            toToken: toToken.symbol,
+        }}
+        onCreateLiquidity={() => console.log("Create Liquidity action")}
+      />
 
       {isModalVisible && (
         <GlobalModal

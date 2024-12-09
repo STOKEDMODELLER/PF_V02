@@ -1,13 +1,13 @@
 Creating Tokens and Accounts on Solana Devnet
 Cluster URL: https://api.devnet.solana.com
-Generated on: 2024-12-07 12:42:14.846170
+Generated on: 2024-12-08 11:24:15.232833
 ---------------------------------------
 Setting up Token A...
-Token A Mint Address: CwEXXvc5pUo3rQrs1wfbYHyKyB7xjb9XKhDesHL9eij1
-Token A Account Address: FBwMCrJrLbsTTYSYeQU1sPUcJQbGm9uPK66Z5wFo5FQU
+Token A Mint Address: 4UJ6TaS4VHvXe4zkebJWqHs5n6wfd11m4kzTcvoW4G58
+Token A Account Address: 2Ms2c7FjY28riC5wF2phiewZZZ2vJ4zer5etSwbzgHJ2
 ---------------------------------------
 Setting up Token B...
-Token B Mint Address: 6aPop5zRCkmNU4EkFatogDd3ZPBtfNorCqt752NbwWdy
-Token B Account Address: H8k94CYYYjvoNAugynigxhL4wz9uY2EAZtVcSCo87oAF
+Token B Mint Address: 3DvhQwBSBHhedZMT4ZLGBNfwwwJP7RGPqnwjjGnEpYDc
+Token B Account Address: 9Y2qkR6zhtGKDP2VmAeTXeWAYUbFMRHaUR9DeNbsGCJw
 ---------------------------------------
 All tokens and accounts have been created successfully.

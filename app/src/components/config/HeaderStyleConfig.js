@@ -5,7 +5,7 @@ const HeaderStyleConfig = {
       container: 'hidden lg:flex w-full bg-gradient-to-b from-[#141852] to-[#0E1139] backdrop-blur-lg border-b border-white/10 shadow-md',
       innerContainer: 'container mx-auto px-8 flex items-center justify-between h-20',
       logo: 'w-12 h-12',
-      navLink: 'text-white text-base font-semibold hover:text-blue-400 transition duration-300',
+      navLink: 'text-white text-base font-semibold text-lg hover:text-blue-400 transition duration-300',
       walletButtonContainer: 'ml-auto',
     },
     mobile: {

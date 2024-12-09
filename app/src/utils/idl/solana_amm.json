@@ -1,217 +1,233 @@
 {
-  "address": "Cz38XQNr2D9SqvN81LJGb1pviCnefSgKNQyt4Qjb6An1",
-  "metadata": {
-    "name": "solana_amm",
-    "version": "0.1.0",
-    "spec": "0.1.0",
-    "description": "Created with Anchor"
-  },
+  "version": "0.1.0",
+  "name": "solana_amm",
   "instructions": [
     {
-      "name": "add_liquidity",
-      "discriminator": [
-        181,
-        157,
-        89,
-        67,
-        143,
-        182,
-        52,
-        72
-      ],
+      "name": "initializePool",
       "accounts": [
         {
           "name": "pool",
-          "writable": true
+          "isMut": true,
+          "isSigner": true
         },
         {
-          "name": "lp_mint",
-          "writable": true
+          "name": "lpMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          "name": "user_lp_account",
-          "writable": true
+          "name": "userLpAccount",
+          "isMut": true,
+          "isSigner": false
         },
         {
           "name": "user",
-          "writable": true,
-          "signer": true
+          "isMut": true,
+          "isSigner": true
         },
         {
-          "name": "token_program",
-          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "amount_a",
+          "name": "tokenA",
+          "type": "publicKey"
+        },
+        {
+          "name": "tokenB",
+          "type": "publicKey"
+        },
+        {
+          "name": "initialAmountA",
           "type": "u64"
         },
         {
-          "name": "amount_b",
+          "name": "initialAmountB",
+          "type": "u64"
+        },
+        {
+          "name": "feePercentage",
+          "type": "u16"
+        },
+        {
+          "name": "adminFeePercentage",
+          "type": "u16"
+        },
+        {
+          "name": "poolName",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "poolDescription",
+          "type": {
+            "array": [
+              "u8",
+              128
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "addLiquidity",
+      "accounts": [
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "lpMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userLpAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amountA",
+          "type": "u64"
+        },
+        {
+          "name": "amountB",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "initialize_pool",
-      "discriminator": [
-        95,
-        180,
-        10,
-        172,
-        84,
-        174,
-        232,
-        40
-      ],
+      "name": "removeLiquidity",
       "accounts": [
         {
           "name": "pool",
-          "writable": true,
-          "signer": true
+          "isMut": true,
+          "isSigner": false
         },
         {
-          "name": "lp_mint",
-          "writable": true
+          "name": "lpMint",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          "name": "user_lp_account",
-          "writable": true
+          "name": "userLpAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenA",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userTokenB",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolTokenA",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "poolTokenB",
+          "isMut": true,
+          "isSigner": false
         },
         {
           "name": "user",
-          "writable": true,
-          "signer": true
+          "isMut": true,
+          "isSigner": true
         },
         {
-          "name": "system_program",
-          "address": "11111111111111111111111111111111"
-        },
-        {
-          "name": "token_program",
-          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "token_a",
-          "type": "pubkey"
-        },
-        {
-          "name": "token_b",
-          "type": "pubkey"
-        },
-        {
-          "name": "initial_amount_a",
-          "type": "u64"
-        },
-        {
-          "name": "initial_amount_b",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "remove_liquidity",
-      "discriminator": [
-        80,
-        85,
-        209,
-        72,
-        24,
-        206,
-        177,
-        108
-      ],
-      "accounts": [
-        {
-          "name": "pool",
-          "writable": true
-        },
-        {
-          "name": "lp_mint",
-          "writable": true
-        },
-        {
-          "name": "user_lp_account",
-          "writable": true
-        },
-        {
-          "name": "pool_token_a",
-          "writable": true
-        },
-        {
-          "name": "pool_token_b",
-          "writable": true
-        },
-        {
-          "name": "user_token_a",
-          "writable": true
-        },
-        {
-          "name": "user_token_b",
-          "writable": true
-        },
-        {
-          "name": "user",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "token_program",
-          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
-        }
-      ],
-      "args": [
-        {
-          "name": "lp_tokens",
+          "name": "lpTokenAmount",
           "type": "u64"
         }
       ]
     },
     {
       "name": "swap",
-      "discriminator": [
-        248,
-        198,
-        158,
-        145,
-        225,
-        117,
-        135,
-        200
-      ],
       "accounts": [
         {
           "name": "pool",
-          "writable": true
+          "isMut": true,
+          "isSigner": false
         },
         {
-          "name": "input_token",
-          "writable": true
+          "name": "inputToken",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          "name": "output_token",
-          "writable": true
+          "name": "outputToken",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userOutputToken",
+          "isMut": true,
+          "isSigner": false
         },
         {
           "name": "user",
-          "writable": true,
-          "signer": true
+          "isMut": false,
+          "isSigner": true
         },
         {
-          "name": "token_program",
-          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "amount_in",
+          "name": "amountIn",
           "type": "u64"
         },
         {
-          "name": "minimum_out",
+          "name": "minimumOut",
           "type": "u64"
         }
       ]
@@ -220,62 +236,130 @@
   "accounts": [
     {
       "name": "Pool",
-      "discriminator": [
-        241,
-        154,
-        109,
-        4,
-        17,
-        177,
-        109,
-        188
-      ]
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tokenA",
+            "type": "publicKey"
+          },
+          {
+            "name": "tokenB",
+            "type": "publicKey"
+          },
+          {
+            "name": "reserveA",
+            "type": "u64"
+          },
+          {
+            "name": "reserveB",
+            "type": "u64"
+          },
+          {
+            "name": "lpMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "totalLpTokens",
+            "type": "u64"
+          },
+          {
+            "name": "feePercentage",
+            "type": "u16"
+          },
+          {
+            "name": "adminFeePercentage",
+            "type": "u16"
+          },
+          {
+            "name": "feesCollectedA",
+            "type": "u64"
+          },
+          {
+            "name": "feesCollectedB",
+            "type": "u64"
+          },
+          {
+            "name": "creationTimestamp",
+            "type": "i64"
+          },
+          {
+            "name": "lastUpdatedTimestamp",
+            "type": "i64"
+          },
+          {
+            "name": "isVerified",
+            "type": "bool"
+          },
+          {
+            "name": "isPaused",
+            "type": "bool"
+          },
+          {
+            "name": "poolName",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "poolDescription",
+            "type": {
+              "array": [
+                "u8",
+                128
+              ]
+            }
+          }
+        ]
+      }
     }
   ],
   "errors": [
     {
       "code": 6000,
+      "name": "InvalidInitialAmount",
+      "msg": "Invalid initial token amounts."
+    },
+    {
+      "code": 6001,
       "name": "InvalidLiquidityRatio",
       "msg": "Invalid liquidity ratio."
     },
     {
-      "code": 6001,
+      "code": 6002,
+      "name": "InvalidLiquidityAmount",
+      "msg": "Invalid liquidity amount."
+    },
+    {
+      "code": 6003,
       "name": "SlippageExceeded",
       "msg": "Slippage exceeded."
+    },
+    {
+      "code": 6004,
+      "name": "PoolPaused",
+      "msg": "Pool is currently paused."
+    },
+    {
+      "code": 6005,
+      "name": "InvalidPDA",
+      "msg": "Invalid PDA."
+    },
+    {
+      "code": 6006,
+      "name": "InvalidFeePercentage",
+      "msg": "Invalid fee percentage."
+    },
+    {
+      "code": 6007,
+      "name": "InvalidSwapAmount",
+      "msg": "Invalid swap amount."
     }
   ],
-  "types": [
-    {
-      "name": "Pool",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "token_a",
-            "type": "pubkey"
-          },
-          {
-            "name": "token_b",
-            "type": "pubkey"
-          },
-          {
-            "name": "reserve_a",
-            "type": "u64"
-          },
-          {
-            "name": "reserve_b",
-            "type": "u64"
-          },
-          {
-            "name": "lp_mint",
-            "type": "pubkey"
-          },
-          {
-            "name": "total_lp_tokens",
-            "type": "u64"
-          }
-        ]
-      }
-    }
-  ]
+  "metadata": {
+    "address": "4XhFa2aZZh8L4ejKA44fy2RNTu1b4JRTChdoCp1VnonN"
+  }
 }

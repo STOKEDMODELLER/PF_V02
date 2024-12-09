@@ -1,7 +1,6 @@
 [workspace]
 members = [
-    "programs/*"
-, "sol-balance"]
+    "programs/*"]
 resolver = "2"
 
 [profile.release]

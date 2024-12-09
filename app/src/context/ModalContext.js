@@ -1,12 +1,17 @@
-
-// ./context/ModalContext.js
 import React, { createContext, useState, useContext } from 'react';
+import PropTypes from 'prop-types';
 import GlobalModal from '../components/Global/GlobalModal';
 
 const ModalContext = createContext();
 
+/**
+ * Custom hook to access the modal context, providing `showModal` and `closeModal`.
+ */
 export const useModal = () => useContext(ModalContext);
 
+/**
+ * ModalProvider that wraps the application, providing global modal control.
+ */
 export const ModalProvider = ({ children }) => {
     const [modalState, setModalState] = useState({
         isVisible: false,
@@ -49,4 +54,8 @@ export const ModalProvider = ({ children }) => {
             />
         </ModalContext.Provider>
     );
+};
+
+ModalProvider.propTypes = {
+    children: PropTypes.node.isRequired,
 };

@@ -1,0 +1,150 @@
+{
+    "address": "4XhFa2aZZh8L4ejKA44fy2RNTu1b4JRTChdoCp1VnonN",
+    "metadata": {
+      "name": "solana_amm",
+      "version": "0.1.0",
+      "spec": "0.1.0",
+      "description": "Created with Anchor"
+    },
+    "instructions": [
+      {
+        "name": "add_liquidity",
+        "discriminator": [181, 157, 89, 67, 143, 182, 52, 72],
+        "accounts": [
+          {
+            "name": "pool",
+            "writable": true
+          },
+          {
+            "name": "lp_mint",
+            "writable": true
+          },
+          {
+            "name": "user_lp_account",
+            "writable": true
+          },
+          {
+            "name": "user",
+            "writable": true,
+            "signer": true
+          },
+          {
+            "name": "token_program",
+            "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+          }
+        ],
+        "args": [
+          {
+            "name": "amount_a",
+            "type": "u64"
+          },
+          {
+            "name": "amount_b",
+            "type": "u64"
+          }
+        ]
+      }
+    ],
+    "accounts": [
+      {
+        "name": "Pool",
+        "discriminator": [241, 154, 109, 4, 17, 177, 109, 188]
+      }
+    ],
+    "errors": [
+      {
+        "code": 6000,
+        "name": "InvalidLiquidityRatio",
+        "msg": "Invalid liquidity ratio."
+      },
+      {
+        "code": 6001,
+        "name": "SlippageExceeded",
+        "msg": "Slippage exceeded."
+      },
+      {
+        "code": 6002,
+        "name": "PoolPaused",
+        "msg": "Pool is currently paused."
+      }
+    ],
+    "types": [
+      {
+        "name": "Pool",
+        "type": {
+          "kind": "struct",
+          "fields": [
+            {
+              "name": "token_a",
+              "type": "publicKey"
+            },
+            {
+              "name": "token_b",
+              "type": "publicKey"
+            },
+            {
+              "name": "reserve_a",
+              "type": "u64"
+            },
+            {
+              "name": "reserve_b",
+              "type": "u64"
+            },
+            {
+              "name": "lp_mint",
+              "type": "publicKey"
+            },
+            {
+              "name": "total_lp_tokens",
+              "type": "u64"
+            },
+            {
+              "name": "fee_percentage",
+              "type": "u16"
+            },
+            {
+              "name": "admin_fee_percentage",
+              "type": "u16"
+            },
+            {
+              "name": "fees_collected_a",
+              "type": "u64"
+            },
+            {
+              "name": "fees_collected_b",
+              "type": "u64"
+            },
+            {
+              "name": "creation_timestamp",
+              "type": "i64"
+            },
+            {
+              "name": "last_updated_timestamp",
+              "type": "i64"
+            },
+            {
+              "name": "is_verified",
+              "type": "bool"
+            },
+            {
+              "name": "is_paused",
+              "type": "bool"
+            },
+            {
+              "name": "pool_name",
+              "type": {
+                "array": ["u8", 32]
+              }
+            },
+            {
+              "name": "pool_description",
+              "type": {
+                "array": ["u8", 128]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+  

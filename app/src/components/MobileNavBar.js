@@ -4,8 +4,8 @@ const MobileNavBar = () => {
   return (
     <div className="fixed bottom-0 w-full flex items-center justify-around h-14 bg-gradient-to-b from-[#141852] to-[#0E1139] backdrop-blur-lg border-t border-white/10 shadow-lg z-50 lg:hidden">
       {/* Home */}
-      <button className="flex flex-col items-center text-white text-sm font-medium hover:brightness-125 transition">
-        <a href="/">
+      <button className="flex flex-col items-center justify-center text-white text-sm font-medium hover:brightness-125 transition">
+        <a href="/" className="flex flex-col items-center">
           <svg
             aria-hidden="true"
             focusable="false"
@@ -17,13 +17,13 @@ const MobileNavBar = () => {
           >
             <path d="M5.22 14.78a.75.75 0 0 0 1.06-1.06L4.56 12h8.69a.75.75 0 0 0 0-1.5H4.56l1.72-1.72a.75.75 0 0 0-1.06-1.06l-3 3a.75.75 0 0 0 0 1.06l3 3Zm5.56-6.5a.75.75 0 1 1-1.06-1.06l1.72-1.72H2.75a.75.75 0 0 1 0-1.5h8.69L9.72 2.28a.75.75 0 0 1 1.06-1.06l3 3a.75.75 0 0 1 0 1.06l-3 3Z" />
           </svg>
-          Home
+          <span>Home</span>
         </a>
       </button>
 
       {/* Pools */}
-      <button className="flex flex-col items-center text-white text-sm font-medium hover:brightness-125 transition">
-        <a href="/pools">
+      <button className="flex flex-col items-center justify-center text-white text-sm font-medium hover:brightness-125 transition">
+        <a href="/pools" className="flex flex-col items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -37,13 +37,13 @@ const MobileNavBar = () => {
               clipRule="evenodd"
             />
           </svg>
-          Pools
+          <span>Pools</span>
         </a>
       </button>
 
       {/* Portfolio */}
-      <button className="flex flex-col items-center text-white text-sm font-medium hover:brightness-125 transition">
-        <a href="/portfolio">
+      <button className="flex flex-col items-center justify-center text-white text-sm font-medium hover:brightness-125 transition">
+        <a href="/portfolio" className="flex flex-col items-center">
           <svg
             className="h-6 w-6 mb-1 fill-primary"
             viewBox="0 0 24 24"
@@ -55,7 +55,7 @@ const MobileNavBar = () => {
               fill="currentColor"
             />
           </svg>
-          Portfolio
+          <span>Portfolio</span>
         </a>
       </button>
     </div>

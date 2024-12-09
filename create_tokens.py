@@ -1,10 +1,12 @@
 import subprocess
 import sys
+import json
 from datetime import datetime
 
 # Configuration
 CLUSTER_URL = "https://api.devnet.solana.com"
 DETAILS_FILE = "./details.txt"
+TOKENS_FILE = "./app/public/tokens_dummy_data.json"
 
 # Helper function to run shell commands
 def run_command(command):
@@ -55,6 +57,49 @@ def create_account(token_mint):
 def mint_tokens(token_mint, account_address, amount):
     run_command(f"spl-token mint {token_mint} {amount} {account_address} --url {CLUSTER_URL}")
 
+# Function to generate a creative token name
+def generate_creative_name():
+    return f"CreativeToken{datetime.now().strftime('%Y%m%d%H%M%S')}"
+
+# Function to update tokens list in JSON file
+def update_tokens_json(token_address, mint_authority, supply, decimals, symbol):
+    try:
+        # Read the existing JSON file
+        with open(TOKENS_FILE, "r") as file:
+            tokens_data = json.load(file)
+
+        # Add the new token details
+        new_token = {
+            "address": token_address,
+            "mintAuthority": mint_authority,
+            "supply": supply,
+            "decimals": decimals,
+            "isInitialized": True,
+            "freezeAuthority": None,
+            "tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+            "extensions": {},
+            "updatedEpoch": None,
+            "updatedAt": datetime.now().isoformat(),
+            "updatedSlot": None,
+            "writeVersion": 0,
+            "metadata": {
+                "name": symbol,
+                "risk": 1,
+                "symbol": symbol
+            },
+            "volumeUsdc24h": None
+        }
+
+        # Add the new token to the data list
+        tokens_data["data"].append(new_token)
+
+        # Write the updated list back to the file
+        with open(TOKENS_FILE, "w") as file:
+            json.dump(tokens_data, file, indent=2)
+        print(f"Successfully added {symbol} to the tokens list.")
+    except Exception as e:
+        print(f"Error updating tokens list: {e}")
+
 # Main workflow
 def main():
     initialize_log()
@@ -71,6 +116,10 @@ def main():
         mint_tokens(token_a, account_a, 1000)
         log_message("---------------------------------------")
 
+        # Add Token A to the JSON list with a creative name
+        creative_name_a = generate_creative_name()
+        update_tokens_json(token_a, None, 1000000000, 9, creative_name_a)
+
         # Token B Setup
         log_message("Setting up Token B...")
         token_b = create_token()
@@ -81,6 +130,10 @@ def main():
         
         mint_tokens(token_b, account_b, 2000)
         log_message("---------------------------------------")
+
+        # Add Token B to the JSON list with a creative name
+        creative_name_b = generate_creative_name()
+        update_tokens_json(token_b, None, 2000000000, 9, creative_name_b)
 
         log_message("All tokens and accounts have been created successfully.")
         with open(DETAILS_FILE, "r") as file:

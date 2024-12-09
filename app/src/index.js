@@ -3,15 +3,21 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import WalletConnectionProvider from './components/WalletProvider'; // Your WalletProvider.js
 import '@solana/wallet-adapter-react-ui/styles.css';
 import { ModalProvider } from './context/ModalContext';
+import { PriceProvider } from './context/PriceContext'; // Import PriceProvider
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <ModalProvider>
-        <App />
-    </ModalProvider>
+    <WalletConnectionProvider>
+      <ModalProvider>
+        <PriceProvider> {/* Wrap App with PriceProvider */}
+          <App />
+        </PriceProvider>
+      </ModalProvider>
+    </WalletConnectionProvider>
   </React.StrictMode>
 );
 

@@ -1,348 +1,171 @@
-// File: src/utils/poolInteraction.js
+import { Connection, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY, Keypair } from '@solana/web3.js';
+import { TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID, getAssociatedTokenAddress } from '@solana/spl-token';
+import { Program, AnchorProvider, BN } from '@project-serum/anchor';
+import PoolIDL from './idl/solana_amm.json';
 
-import {
-    Connection,
-    PublicKey,
-    Keypair,
-    SystemProgram,
-    Transaction,
-    sendAndConfirmTransaction,
-  } from '@solana/web3.js';
-  import {
-    Program,
-    AnchorProvider,
-    BN,
-  } from '@project-serum/anchor';
-  import {
-    TOKEN_PROGRAM_ID,
-    ASSOCIATED_TOKEN_PROGRAM_ID,
-    getAssociatedTokenAddress,
-    getMinimumBalanceForRentExemptMint,
-    createInitializeMintInstruction,
-    createAssociatedTokenAccountInstruction,
-    createTransferInstruction,
-    createMintToInstruction,
-  } from '@solana/spl-token';
-  import idl from './idl/solana_amm.json'; // Ensure this path is correct
+const endpoint = process.env.REACT_APP_MAIN_RPC; // Grab the main RPC directly
+const RPC_ENDPOINT = endpoint;
+const connection = new Connection(RPC_ENDPOINT, 'confirmed');
+
+/**
+ * Fetches or derives the pool PDA (Program Derived Address) based on token pair.
+ * This function remains unchanged and returns { pda, bump, exists }.
+ */
+export const getOrCreatePoolPDA = async (tokenAAddress, tokenBAddress) => {
+  console.log('Starting PDA derivation...');
+  if (!tokenAAddress || !tokenBAddress) {
+    throw new Error('Token addresses cannot be null or undefined.');
+  }
+
+  const tokenA = new PublicKey(tokenAAddress);
+  const tokenB = new PublicKey(tokenBAddress);
+  console.log('Token A:', tokenA.toBase58());
+  console.log('Token B:', tokenB.toBase58());
+
+  // Sort tokens using the same logic as the Rust program
+  const [sortedTokenA, sortedTokenB] = tokenA < tokenB ? [tokenA, tokenB] : [tokenB, tokenA];
+  console.log('Sorted tokens:', sortedTokenA.toBase58(), sortedTokenB.toBase58());
+
+  const programId = new PublicKey(PoolIDL.metadata.address);
+  if (!programId) {
+    throw new Error('Program ID is undefined in the IDL metadata.');
+  }
+  console.log(Buffer.from('pool'), sortedTokenA.toBuffer(), sortedTokenB.toBuffer(), programId);
   
-  // Connection to Solana devnet
-  const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
-  
-  // Program ID (update with your actual program ID)
-  const programId = new PublicKey('5dctRN4vE4AFJY6VrT2cMj8sTvSwMnDwuJEwvTD7HWjW'); // Replace with your program ID
-  
-  // Function to get the provider
-  const getProvider = (wallet) => {
-    if (!wallet || !wallet.publicKey) {
-      throw new Error('Wallet not connected');
+  // Derive the old-style PDA using token pair
+  const [poolPDA, bump] = await PublicKey.findProgramAddress(
+    [Buffer.from('pool'), sortedTokenA.toBuffer(), sortedTokenB.toBuffer()],
+    programId
+  );
+  console.log('Derived Pool PDA:', poolPDA.toBase58());
+  console.log('Bump Seed:', bump);
+
+  const accountInfo = await connection.getAccountInfo(poolPDA);
+  console.log('Account info retrieved:', accountInfo ? 'Exists' : 'Does not exist');
+
+  return { pda: poolPDA, bump, exists: !!accountInfo };
+};
+
+/**
+ * Checks if a pool already exists for the given token pair by calling getOrCreatePoolPDA
+ * and examining the 'exists' flag it returns.
+ */
+export const checkPoolExists = async (tokenAAddress, tokenBAddress) => {
+  const { pda, exists } = await getOrCreatePoolPDA(tokenAAddress, tokenBAddress);
+  return { pda, exists };
+};
+
+/**
+ * Creates a new pool on the Solana blockchain if it doesn't already exist.
+ * This uses the updated logic where `pool` is a normal account (requiring a Keypair),
+ * and `lpMint` + `userLpAccount` PDAs are derived from `pool`.
+ */
+export const createPoolIfNotExists = async (tokenAAddress, tokenBAddress, amountA, amountB, wallet) => {
+  try {
+    console.log('Initiating pool creation process...');
+    console.log('Parameters:', { tokenAAddress, tokenBAddress, amountA, amountB, wallet: wallet.publicKey.toBase58() });
+
+    // Sort tokens so token_a < token_b as required by the program
+    let tokenA = new PublicKey(tokenAAddress);
+    let tokenB = new PublicKey(tokenBAddress);
+    if (tokenB < tokenA) {
+      [tokenA, tokenB] = [tokenB, tokenA];
     }
-    const provider = new AnchorProvider(connection, wallet.adapter, {
-      preflightCommitment: 'confirmed',
-    });
-    return provider;
-  };
-  
-  // Export the initializePool function
-  export const initializePool = async (
-    tokenAAddress,
-    tokenBAddress,
-    initialAmountA,
-    initialAmountB,
-    wallet
-  ) => {
-    const provider = getProvider(wallet);
-    const program = new Program(idl, programId, provider);
-  
-    // Generate new Keypairs
+
+    // Check if pool already exists
+    const { pda: oldPda, exists } = await checkPoolExists(tokenA.toBase58(), tokenB.toBase58());
+    if (exists) {
+      console.log("A pool for this token pair already exists. Cannot create a new one.");
+      return null;
+    }
+
+    const provider = new AnchorProvider(connection, wallet, AnchorProvider.defaultOptions());
+    const programId = PoolIDL.metadata?.address;
+    if (!programId) {
+      throw new Error('Program ID is undefined in the IDL metadata.');
+    }
+
+    const program = new Program(PoolIDL, new PublicKey(programId), provider);
+
+    // Generate a new Keypair for the pool account since it's a normal init account now
     const poolKeypair = Keypair.generate();
-    const lpMintKeypair = Keypair.generate();
-  
-    // Calculate the minimum balance required for the LP mint account
-    const mintRentExemption = await getMinimumBalanceForRentExemptMint(connection);
-  
-    // Get associated token accounts for the user
-    const userTokenAAccount = await getAssociatedTokenAddress(
-      new PublicKey(tokenAAddress),
-      wallet.publicKey
+    console.log('Generated new pool Keypair:', poolKeypair.publicKey.toBase58());
+
+    // Derive the lpMint PDA from [b"lp_mint", pool.key()]
+    const [lpMintPDA] = await PublicKey.findProgramAddress(
+      [Buffer.from('lp_mint'), poolKeypair.publicKey.toBuffer()],
+      new PublicKey(programId)
     );
-    const userTokenBAccount = await getAssociatedTokenAddress(
-      new PublicKey(tokenBAddress),
-      wallet.publicKey
-    );
-  
-    // Get associated token accounts for the pool
-    const poolTokenAAccount = await getAssociatedTokenAddress(
-      new PublicKey(tokenAAddress),
-      poolKeypair.publicKey,
-      true
-    );
-    const poolTokenBAccount = await getAssociatedTokenAddress(
-      new PublicKey(tokenBAddress),
-      poolKeypair.publicKey,
-      true
-    );
-  
-    // Get user's LP token account
-    const userLpTokenAccount = await getAssociatedTokenAddress(
-      lpMintKeypair.publicKey,
-      wallet.publicKey
-    );
-  
-    const transaction = new Transaction();
-  
-    // Create pool's associated token accounts
-    transaction.add(
-      createAssociatedTokenAccountInstruction(
-        wallet.publicKey,
-        poolTokenAAccount,
-        poolKeypair.publicKey,
-        new PublicKey(tokenAAddress)
-      ),
-      createAssociatedTokenAccountInstruction(
-        wallet.publicKey,
-        poolTokenBAccount,
-        poolKeypair.publicKey,
-        new PublicKey(tokenBAddress)
+    console.log('Derived lpMint PDA:', lpMintPDA.toBase58());
+
+    // Derive the user LP token account (Associated Token Account)
+    const userLpAccount = await getAssociatedTokenAddress(lpMintPDA, wallet.publicKey);
+    console.log('Derived user LP ATA:', userLpAccount.toBase58());
+
+    console.log('Constructing pool initialization transaction...');
+    console.log("initializePool arguments:", {
+      tokenA: tokenA.toBase58(),
+      tokenB: tokenB.toBase58(),
+      amountA,
+      amountB,
+      feePercentage: 1,
+      adminFeePercentage: 1,
+      poolName: Buffer.from('Pool Name').slice(0, 32),
+      poolDescription: Buffer.from('Pool Description').slice(0, 128)
+    });
+    
+    console.log("Derived PDAs and accounts:", {
+      pool: poolKeypair.publicKey.toBase58(),
+      lpMint: lpMintPDA.toBase58(),
+      userLpAccount: userLpAccount.toBase58(),
+      user: wallet.publicKey.toBase58(),
+      systemProgram: SystemProgram.programId.toBase58(),
+      tokenProgram: TOKEN_PROGRAM_ID.toBase58(),
+      associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID.toBase58(),
+      rent: SYSVAR_RENT_PUBKEY.toBase58()
+    });
+    const poolNameBuf = Buffer.from("Pool Name".padEnd(32, '\0'));
+    const poolDescBuf = Buffer.from("Pool Description".padEnd(128, '\0'));
+
+    const amountAInt = Math.floor(amountA); // must be an integer
+    const amountBInt = Math.floor(amountB); // must be an integer
+
+    const tx = await program.methods
+      .initializePool(
+        tokenA,
+        tokenB,
+        new BN(amountAInt),
+        new BN(amountBInt),
+        1,   // fee_percentage u16
+        1,   // admin_fee_percentage u16
+        poolNameBuf,
+        poolDescBuf
       )
-    );
-  
-    // Create LP token mint account
-    transaction.add(
-      SystemProgram.createAccount({
-        fromPubkey: wallet.publicKey,
-        newAccountPubkey: lpMintKeypair.publicKey,
-        lamports: mintRentExemption,
-        space: 82, // Mint account size
-        programId: TOKEN_PROGRAM_ID,
-      }),
-      // Initialize LP token mint
-      createInitializeMintInstruction(
-        lpMintKeypair.publicKey,
-        6, // Decimals
-        poolKeypair.publicKey, // Mint authority
-        null // Freeze authority (optional)
-      )
-    );
-  
-    // Create user's associated token account for LP tokens if it doesn't exist
-    const userLpAccountInfo = await connection.getAccountInfo(userLpTokenAccount);
-    if (!userLpAccountInfo) {
-      transaction.add(
-        createAssociatedTokenAccountInstruction(
-          wallet.publicKey,
-          userLpTokenAccount,
-          wallet.publicKey,
-          lpMintKeypair.publicKey
-        )
-      );
-    }
-  
-    // Convert amounts to smallest units (assuming tokens have 6 decimals)
-    const adjustedAmountA = new BN(initialAmountA * 10 ** 6);
-    const adjustedAmountB = new BN(initialAmountB * 10 ** 6);
-  
-    // Transfer initial tokens from user to pool's token accounts
-    transaction.add(
-      createTransferInstruction(
-        userTokenAAccount,
-        poolTokenAAccount,
-        wallet.publicKey,
-        adjustedAmountA.toNumber()
-      ),
-      createTransferInstruction(
-        userTokenBAccount,
-        poolTokenBAccount,
-        wallet.publicKey,
-        adjustedAmountB.toNumber()
-      )
-    );
-  
-    // Signers other than the wallet
-    const signers = [poolKeypair, lpMintKeypair];
-  
-    try {
-      // Send the transaction to create accounts and transfer tokens
-      const txSig = await sendAndConfirmTransaction(connection, transaction, [
-        wallet.adapter.payer,
-        poolKeypair,
-        lpMintKeypair,
-      ]);
-  
-      console.log('Transaction signature:', txSig);
-  
-      // Now, call the initializePool instruction
-      const tx = await program.methods
-        .initializePool(
-          adjustedAmountA,
-          adjustedAmountB
-        )
-        .accounts({
-          pool: poolKeypair.publicKey,
-          lpMint: lpMintKeypair.publicKey,
-          userLpAccount: userLpTokenAccount,
-          user: wallet.publicKey,
-          systemProgram: SystemProgram.programId,
-          tokenProgram: TOKEN_PROGRAM_ID,
-          poolTokenA: poolTokenAAccount,
-          poolTokenB: poolTokenBAccount,
-          userTokenA: userTokenAAccount,
-          userTokenB: userTokenBAccount,
-          rent: SystemProgram.rent,
-        })
-        .signers([poolKeypair, lpMintKeypair])
-        .rpc();
-  
-      console.log('Pool initialized successfully. Transaction signature:', tx);
-  
-      return tx;
-    } catch (error) {
-      console.error('Failed to initialize pool:', error);
-      throw error;
-    }
-  };
-  
-  // Export the getPools function
-  export const getPools = async (wallet) => {
-    const provider = getProvider(wallet);
-    const program = new Program(idl, programId, provider);
-  
-    try {
-      const pools = await program.account.pool.all();
-      return pools.map(({ publicKey, account }) => ({
-        publicKey,
-        account,
-      }));
-    } catch (error) {
-      console.error('Error fetching pools:', error);
-      throw error;
-    }
-  };
-  
-  // Export the addLiquidity function
-  export const addLiquidity = async (poolAddress, amountA, amountB, wallet) => {
-    const provider = getProvider(wallet);
-    const program = new Program(idl, programId, provider);
-  
-    try {
-      // Convert amounts to smallest units
-      const adjustedAmountA = new BN(amountA * 10 ** 6);
-      const adjustedAmountB = new BN(amountB * 10 ** 6);
-  
-      // Fetch pool account
-      const poolAccount = await program.account.pool.fetch(poolAddress);
-  
-      // Get associated token accounts
-      const userTokenAAccount = await getAssociatedTokenAddress(
-        poolAccount.tokenA,
-        wallet.publicKey
-      );
-      const userTokenBAccount = await getAssociatedTokenAddress(
-        poolAccount.tokenB,
-        wallet.publicKey
-      );
-  
-      const poolTokenAAccount = await getAssociatedTokenAddress(
-        poolAccount.tokenA,
-        poolAddress,
-        true
-      );
-      const poolTokenBAccount = await getAssociatedTokenAddress(
-        poolAccount.tokenB,
-        poolAddress,
-        true
-      );
-  
-      const userLpTokenAccount = await getAssociatedTokenAddress(
-        poolAccount.lpMint,
-        wallet.publicKey
-      );
-  
-      // Create transaction
-      const transaction = new Transaction();
-  
-      // Create user's LP token account if it doesn't exist
-      const userLpAccountInfo = await connection.getAccountInfo(userLpTokenAccount);
-      if (!userLpAccountInfo) {
-        transaction.add(
-          createAssociatedTokenAccountInstruction(
-            wallet.publicKey,
-            userLpTokenAccount,
-            wallet.publicKey,
-            poolAccount.lpMint
-          )
-        );
-      }
-  
-      // Transfer tokens from user to pool
-      transaction.add(
-        createTransferInstruction(
-          userTokenAAccount,
-          poolTokenAAccount,
-          wallet.publicKey,
-          adjustedAmountA.toNumber()
-        ),
-        createTransferInstruction(
-          userTokenBAccount,
-          poolTokenBAccount,
-          wallet.publicKey,
-          adjustedAmountB.toNumber()
-        )
-      );
-  
-      // Send transaction
-      const txSig = await sendAndConfirmTransaction(connection, transaction, [
-        wallet.adapter.payer,
-      ]);
-  
-      console.log('Transfer transaction signature:', txSig);
-  
-      // Call addLiquidity instruction
-      const tx = await program.methods
-        .addLiquidity(adjustedAmountA, adjustedAmountB)
-        .accounts({
-          pool: poolAddress,
-          lpMint: poolAccount.lpMint,
-          userLpAccount: userLpTokenAccount,
-          user: wallet.publicKey,
-          systemProgram: SystemProgram.programId,
-          tokenProgram: TOKEN_PROGRAM_ID,
-          poolTokenA: poolTokenAAccount,
-          poolTokenB: poolTokenBAccount,
-          userTokenA: userTokenAAccount,
-          userTokenB: userTokenBAccount,
-          rent: SystemProgram.rent,
-        })
-        .rpc();
-  
-      console.log('Liquidity added successfully. Transaction signature:', tx);
-  
-      return tx;
-    } catch (error) {
-      console.error('Failed to add liquidity:', error);
-      throw error;
-    }
-  };
-  
-  // Export the getPoolByTokens function
-  export const getPoolByTokens = async (tokenAAddress, tokenBAddress, wallet) => {
-    const provider = getProvider(wallet);
-    const program = new Program(idl, programId, provider);
-  
-    try {
-      const pools = await program.account.pool.all();
-  
-      const pool = pools.find(
-        ({ account }) =>
-          (account.tokenA.equals(new PublicKey(tokenAAddress)) &&
-            account.tokenB.equals(new PublicKey(tokenBAddress))) ||
-          (account.tokenA.equals(new PublicKey(tokenBAddress)) &&
-            account.tokenB.equals(new PublicKey(tokenAAddress)))
-      );
-  
-      return pool || null;
-    } catch (error) {
-      console.error('Error fetching pool by tokens:', error);
-      throw error;
-    }
-  };
-  
+      .accounts({
+        pool: poolKeypair.publicKey,
+        lpMint: lpMintPDA,
+        userLpAccount: userLpAccount,
+        user: wallet.publicKey,
+        systemProgram: SystemProgram.programId,
+        tokenProgram: TOKEN_PROGRAM_ID,
+        associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        rent: SYSVAR_RENT_PUBKEY,
+      })
+      .signers([poolKeypair])
+      .rpc();
+
+
+
+    console.info(`New pool created at ${poolKeypair.publicKey.toBase58()} with transaction ID: ${tx}`);
+    return tx;
+  } catch (error) {
+    console.error('Error during pool creation:', error);
+    throw new Error(`Failed to initialize the pool: ${error.message}`);
+  }
+};
+
+export default {
+  getOrCreatePoolPDA,
+  checkPoolExists,
+  createPoolIfNotExists,
+};

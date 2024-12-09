@@ -24,3 +24,5 @@ anchor-debug = []
 anchor-lang = "0.30.1"
 anchor-spl = { version = "0.30.1", features = ["default"] }
 solana-program = "1.17.0" # Use the version compatible with Anchor
+num-bigint = "0.4"
+num-traits = "0.2"

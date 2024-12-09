@@ -1,9 +1,10 @@
-// ./components/LiquidityCard/LiquidityCard.js
 import React from "react";
 import PropTypes from "prop-types";
 import CreateLiquidityButton from "../CreateLiquidityButton/CreateLiquidityButton";
 
 const LiquidityCard = ({ title, liquidityData, loading, error, actions }) => {
+    const createLiquidityAction = actions.find(action => action.label === "Create Liquidity");
+
     if (loading) {
         return (
             <div className="flex flex-col w-full md:max-w-md p-6 bg-gradient-to-b from-indigo-900 to-gray-900 rounded-xl shadow-lg border border-blue-900/50 backdrop-blur">
@@ -16,6 +17,11 @@ const LiquidityCard = ({ title, liquidityData, loading, error, actions }) => {
         return (
             <div className="flex flex-col w-full md:max-w-md p-6 bg-gradient-to-b from-indigo-900 to-gray-900 rounded-xl shadow-lg border border-blue-900/50 backdrop-blur">
                 <p className="text-red-500 text-center">{error}</p>
+                {createLiquidityAction && (
+                    <div className="flex justify-center mt-4">
+                        <CreateLiquidityButton onCreate={createLiquidityAction.onClick} />
+                    </div>
+                )}
             </div>
         );
     }
@@ -24,9 +30,11 @@ const LiquidityCard = ({ title, liquidityData, loading, error, actions }) => {
         return (
             <div className="flex flex-col w-full md:max-w-md p-6 bg-gradient-to-b from-indigo-900 to-gray-900 rounded-xl shadow-lg border border-blue-900/50 backdrop-blur">
                 <p className="text-gray-500 text-center mb-4">No liquidity data available.</p>
-                <div className="flex justify-center">
-                    <CreateLiquidityButton onCreate={actions[0]?.onClick} />
-                </div>
+                {createLiquidityAction && (
+                    <div className="flex justify-center">
+                        <CreateLiquidityButton onCreate={createLiquidityAction.onClick} />
+                    </div>
+                )}
             </div>
         );
     }
@@ -35,29 +43,25 @@ const LiquidityCard = ({ title, liquidityData, loading, error, actions }) => {
         <div className="flex flex-col w-full md:max-w-md p-6 bg-gradient-to-b from-indigo-900 to-gray-900 rounded-xl shadow-lg border border-blue-900/50 backdrop-blur">
             <h3 className="text-sm font-semibold text-white mb-4">{title}</h3>
             <div className="flex flex-col gap-4">
-                <div className="relative flex items-center justify-between p-4 bg-indigo-800 rounded-lg border border-transparent">
-                    <div className="flex flex-col w-[65%]">
-                        <label className="text-sm text-white">Token A</label>
-                        <span className="text-white text-2xl font-semibold">
-                            {liquidityData.reserveA}
-                        </span>
-                        <span className="text-sm text-gray-300">
-                            {liquidityData.tokenA.slice(0, 4)}...{liquidityData.tokenA.slice(-4)}
-                        </span>
-                    </div>
-                </div>
-
-                <div className="relative flex items-center justify-between p-4 bg-indigo-800 rounded-lg border border-transparent">
-                    <div className="flex flex-col w-[65%]">
-                        <label className="text-sm text-white">Token B</label>
-                        <span className="text-white text-2xl font-semibold">
-                            {liquidityData.reserveB}
-                        </span>
-                        <span className="text-sm text-gray-300">
-                            {liquidityData.tokenB.slice(0, 4)}...{liquidityData.tokenB.slice(-4)}
-                        </span>
-                    </div>
-                </div>
+                {["Token A", "Token B"].map((token, index) => {
+                    const reserve = index === 0 ? liquidityData.reserveA : liquidityData.reserveB;
+                    const tokenValue =
+                        index === 0 ? liquidityData.tokenA : liquidityData.tokenB;
+                    return (
+                        <div
+                            key={token}
+                            className="relative flex items-center justify-between p-4 bg-indigo-800 rounded-lg border border-transparent"
+                        >
+                            <div className="flex flex-col w-[65%]">
+                                <label className="text-sm text-white">{token}</label>
+                                <span className="text-white text-2xl font-semibold">{reserve}</span>
+                                <span className="text-sm text-gray-300">
+                                    {tokenValue.slice(0, 4)}...{tokenValue.slice(-4)}
+                                </span>
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
             {actions.length > 0 && (
                 <div className="flex justify-end gap-2 mt-4">
