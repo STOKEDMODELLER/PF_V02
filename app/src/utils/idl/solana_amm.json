@@ -3,7 +3,131 @@
   "name": "solana_amm",
   "instructions": [
     {
+      "name": "initializePlatformState",
+      "docs": [
+        "Initialise the global platform state, storing the governance authority.",
+        "The platform token mint will be recorded here after it is created."
+      ],
+      "accounts": [
+        {
+          "name": "platformState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "admin",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "governanceAuthority",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "initializePlatformToken",
+      "docs": [
+        "Create the platform's native token (PTK).",
+        "",
+        "Requirements:",
+        "- The caller must be the governance authority recorded in `PlatformState`.",
+        "",
+        "The mint authority and decimals are set using the `#[account]` macro. In this case,",
+        "`mint::authority = authority` and `mint::decimals = 9` are specified at creation time."
+      ],
+      "accounts": [
+        {
+          "name": "platformState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "platformMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "mintPlatformTokens",
+      "docs": [
+        "Mint new platform tokens into a given token account.",
+        "",
+        "Requirements:",
+        "- Must be signed by the governance authority.",
+        "- The destination account must be associated with the platform token mint."
+      ],
+      "accounts": [
+        {
+          "name": "platformState",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "platformMint",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "destinationAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "initializePool",
+      "docs": [
+        "Initialise a new liquidity pool for token_a and token_b.",
+        "",
+        "This code is unchanged from your original code except for integrating into the",
+        "single file. The LP token mint is created and initial LP tokens are minted to the user."
+      ],
       "accounts": [
         {
           "name": "pool",
@@ -231,11 +355,97 @@
           "type": "u64"
         }
       ]
+    },
+    {
+      "name": "initializeUserMint",
+      "docs": [
+        "Initialise a user-owned token mint with a given name, symbol, and initial supply.",
+        "The created tokens are minted into the user's associated token account immediately."
+      ],
+      "accounts": [
+        {
+          "name": "userMintData",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "userMint",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userTokenAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "bytes"
+        },
+        {
+          "name": "symbol",
+          "type": "bytes"
+        },
+        {
+          "name": "initialSupply",
+          "type": "u64"
+        }
+      ]
     }
   ],
   "accounts": [
     {
+      "name": "PlatformState",
+      "docs": [
+        "This account holds the global state for the platform, including the governance authority",
+        "and the platform token mint. There should be only one instance of this account per deployment."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "governanceAuthority",
+            "type": "publicKey"
+          },
+          {
+            "name": "platformTokenMint",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
       "name": "Pool",
+      "docs": [
+        "The pool account that stores AMM state."
+      ],
       "type": {
         "kind": "struct",
         "fields": [
@@ -315,6 +525,68 @@
           }
         ]
       }
+    },
+    {
+      "name": "UserMint",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "creator",
+            "type": "publicKey"
+          },
+          {
+            "name": "mintAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "name",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "symbol",
+            "type": {
+              "array": [
+                "u8",
+                10
+              ]
+            }
+          },
+          {
+            "name": "initialSupply",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "NativeToken",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "publicKey"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "symbol",
+            "type": "string"
+          },
+          {
+            "name": "supply",
+            "type": "u64"
+          }
+        ]
+      }
     }
   ],
   "errors": [
@@ -357,9 +629,24 @@
       "code": 6007,
       "name": "InvalidSwapAmount",
       "msg": "Invalid swap amount."
+    },
+    {
+      "code": 6008,
+      "name": "Unauthorized",
+      "msg": "Unauthorised call."
+    },
+    {
+      "code": 6009,
+      "name": "InvalidTokenMint",
+      "msg": "Invalid token mint."
+    },
+    {
+      "code": 6010,
+      "name": "InvalidArgument",
+      "msg": "Invalid argument."
     }
   ],
   "metadata": {
-    "address": "4XhFa2aZZh8L4ejKA44fy2RNTu1b4JRTChdoCp1VnonN"
+    "address": "JBX3RkX7U3WJ3u3q4vrrqiMzh9weSR3YekhwZX4b4HV4"
   }
 }

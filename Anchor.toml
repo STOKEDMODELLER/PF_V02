@@ -5,9 +5,9 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-solana_amm = "4XhFa2aZZh8L4ejKA44fy2RNTu1b4JRTChdoCp1VnonN"
+solana_amm = "JBX3RkX7U3WJ3u3q4vrrqiMzh9weSR3YekhwZX4b4HV4"
 [programs.devnet]
-solana_amm = "4XhFa2aZZh8L4ejKA44fy2RNTu1b4JRTChdoCp1VnonN"
+solana_amm = "JBX3RkX7U3WJ3u3q4vrrqiMzh9weSR3YekhwZX4b4HV4"
 
 [registry]
 url = "https://api.apr.dev"

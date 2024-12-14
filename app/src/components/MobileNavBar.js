@@ -1,15 +1,16 @@
 import React from 'react';
+import './MobileNavBar.scss'; // Import the SCSS file with the glassmorphism effect
 
 const MobileNavBar = () => {
   return (
-    <div className="fixed bottom-0 w-full flex items-center justify-around h-14 bg-gradient-to-b from-[#141852] to-[#0E1139] backdrop-blur-lg border-t border-white/10 shadow-lg z-50 lg:hidden">
+    <div className="mobile-navbar">
       {/* Home */}
-      <button className="flex flex-col items-center justify-center text-white text-sm font-medium hover:brightness-125 transition">
-        <a href="/" className="flex flex-col items-center">
+      <button className="mobile-nav-item">
+        <a href="/Home" className="nav-link">
           <svg
             aria-hidden="true"
             focusable="false"
-            className="h-6 w-6 mb-1 fill-primary"
+            className="nav-icon"
             viewBox="0 0 16 16"
             width="16"
             height="16"
@@ -22,13 +23,13 @@ const MobileNavBar = () => {
       </button>
 
       {/* Pools */}
-      <button className="flex flex-col items-center justify-center text-white text-sm font-medium hover:brightness-125 transition">
-        <a href="/pools" className="flex flex-col items-center">
+      <button className="mobile-nav-item">
+        <a href="/pools" className="nav-link">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 14 18"
-            className="h-6 w-6 mb-1 fill-primary"
+            className="nav-icon"
           >
             <path
               fill="currentColor"
@@ -42,10 +43,10 @@ const MobileNavBar = () => {
       </button>
 
       {/* Portfolio */}
-      <button className="flex flex-col items-center justify-center text-white text-sm font-medium hover:brightness-125 transition">
-        <a href="/portfolio" className="flex flex-col items-center">
+      <button className="mobile-nav-item">
+        <a href="/portfolio" className="nav-link">
           <svg
-            className="h-6 w-6 mb-1 fill-primary"
+            className="nav-icon"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"

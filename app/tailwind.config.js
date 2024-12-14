@@ -1,10 +1,16 @@
-/** @type {import('tailwindcss').Config} */
+const plugin = require('tailwindcss/plugin');
+
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}", // Adjust paths to your project structure
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'], // Include your component files
   theme: {
-    extend: {},
+    extend: {
+      backdropFilter: {
+        none: 'none',
+        blur: 'blur(10px)',
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss-filters'), // Add this plugin
+  ],
 };

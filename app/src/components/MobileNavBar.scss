@@ -1,0 +1,112 @@
+// ==========================================
+// Variables
+// ==========================================
+
+// Colour Palette Variables
+// ==========================================
+// Colour Variables with Transparency
+// ==========================================
+$nav-primary-gradient-start: rgba(20, 24, 82, 0.5); // Equivalent to #1418525e
+$nav-primary-gradient-end: rgba(14, 17, 57, 0.5);   // Equivalent to #0e113956
+
+$nav-icon-color: #ffffff;
+$nav-hover-brightness: 1.2;
+
+// Transparency Variable
+$nav-background-opacity: 0.2;
+$nav-border-opacity: 0.3;
+
+// Glass Effect Variables
+$nav-glass-background: rgba(255, 255, 255, $nav-background-opacity);
+$nav-border-color: rgba(255, 255, 255, $nav-border-opacity);
+$nav-blur: 15px;
+$nav-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+
+// Typography Variables
+$nav-font-color: #ffffff;
+$nav-font-size: 0.9rem;
+$nav-font-weight: 500;
+
+// Spacing and Sizing Variables
+$nav-height: 3.5rem;
+$nav-icon-size: 1.5rem;
+$nav-icon-margin-bottom: 0.25rem;
+
+// ==========================================
+// Glassmorphism Mixin
+// ==========================================
+@mixin glass-effect(
+  $background: $nav-glass-background,
+  $blur: $nav-blur,
+  $border-color: $nav-border-color,
+  $shadow: $nav-shadow
+) {
+  background: $background;
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid $border-color;
+  box-shadow: $shadow;
+}
+
+// ==========================================
+// Root Styles for MobileNavBar
+// ==========================================
+.mobile-navbar {
+  @include glass-effect(
+    $background: linear-gradient(to bottom, $nav-primary-gradient-start, $nav-primary-gradient-end),
+    $blur: $nav-blur,
+    $border-color: $nav-border-color,
+    $shadow: $nav-shadow
+  );
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: $nav-height;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 50;
+
+  // Hide by default for larger screens
+  display: none;
+
+  // Show only on screens smaller than 768px
+  @media (max-width: 768px) {
+    display: flex;
+  }
+}
+
+
+// ==========================================
+// Navigation Item Styles
+// ==========================================
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: $nav-font-color;
+  font-size: $nav-font-size;
+  font-weight: $nav-font-weight;
+  transition: filter 0.3s ease;
+
+  &:hover {
+    filter: brightness($nav-hover-brightness);
+  }
+
+  .nav-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+
+    .nav-icon {
+      height: $nav-icon-size;
+      width: $nav-icon-size;
+      margin-bottom: $nav-icon-margin-bottom;
+      fill: currentColor;
+    }
+  }
+}

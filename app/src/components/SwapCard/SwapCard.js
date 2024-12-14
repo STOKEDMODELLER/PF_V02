@@ -144,14 +144,14 @@ const SwapCard = ({ onSwap }) => {
         </div>
       </div>
 
-      <LiquidityInfo
+      {/* <LiquidityInfo
         connection={connection}
         selectedTokens={{
             fromToken: fromToken.symbol,
             toToken: toToken.symbol,
         }}
         onCreateLiquidity={() => console.log("Create Liquidity action")}
-      />
+      /> */}
 
       {isModalVisible && (
         <GlobalModal

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import {
-    WalletProvider,
-    ConnectionProvider,
-    useWallet,
-    useConnection,
+  WalletProvider,
+  ConnectionProvider,
+  useWallet,
+  useConnection,
 } from "@solana/wallet-adapter-react";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import PropTypes from "prop-types";
@@ -18,95 +18,99 @@ import TransactionHistory from "./components/TransactionHistory/TransactionHisto
 import CreatePool from "./components/CreatePool/CreatePool";
 import { NotificationProvider } from "./context/NotificationContext";
 import { ModalProvider } from "./context/ModalContext";
+import PlatformInfo from "./components/ProgramControl/PlatformInfo";
+import TokenCreation from "./components/TokenCreation/TokenCreation";
 
-// A well-known Solana RPC endpoint, replace with your production RPC if needed
 const endpoint = process.env.REACT_APP_MAIN_RPC || "https://api.mainnet-beta.solana.com";
 
-/**
- * Wrapper for TransactionHistory to ensure a connected wallet.
- */
-const TransactionHistoryWrapper = () => {
-    const { connection } = useConnection();
-    const { publicKey } = useWallet();
-    const walletAddress = publicKey?.toBase58();
+const TransactionHistoryWrapper = React.memo(({ walletAddress, connection }) => {
+  if (!walletAddress) {
+    return <div className="text-white p-4">Please connect your wallet to view transaction history.</div>;
+  }
 
-    if (!walletAddress) {
-        return <div className="text-white p-4">Please connect your wallet to view transaction history.</div>;
-    }
+  return <TransactionHistory walletAddress={walletAddress} connection={connection} />;
+});
 
-    return <TransactionHistory walletAddress={walletAddress} connection={connection} />;
+TransactionHistoryWrapper.propTypes = {
+  walletAddress: PropTypes.string.isRequired,
+  connection: PropTypes.object.isRequired,
 };
 
-TransactionHistory.propTypes = {
-    walletAddress: PropTypes.string.isRequired,
-    connection: PropTypes.object.isRequired,
-};
+
+const AppLayout = React.memo(({ children }) => (
+  <div className="flex flex-col h-screen text-white">
+    {/* Header */}
+    <Header />
+    <MobileNavBar />
+    {/* Main Content Wrapper */}
+    <div className="flex flex-col flex-grow overflow-auto pt-16">
+      <main className="px-4 pb-16 pt-4 flex flex-col items-center bg-pattern bg-cover bg-center gap-y-6">
+        {children}
+      </main>
+    </div>
+
+  </div>
+));
 
 const App = () => {
-    const wallets = [new PhantomWalletAdapter()];
+  const wallets = [new PhantomWalletAdapter()];
+  const [fromToken, setFromToken] = useState({
+    symbol: "SOL",
+    address: "So11111111111111111111111111111111111111112",
+    image: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png",
+  });
 
-    // State for the side panel
-    const [isSidePanelOpen, setIsSidePanelOpen] = useState(false);
+  const [toToken, setToToken] = useState({
+    symbol: "USDC",
+    address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU",
+    image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU/logo.png",
+  });
 
-    // Production-level tokens with real logos
-    const [fromToken, setFromToken] = useState({
-        symbol: "SOL",
-        address: "So11111111111111111111111111111111111111112", // Native SOL placeholder
-        image: "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/info/logo.png"
-    });
+  const handleSwap = (fromAmount, fromToken, toToken, slippage) => {
+    console.log("Swap initiated:", { fromAmount, fromToken, toToken, slippage });
+  };
 
-    const [toToken, setToToken] = useState({
-        symbol: "USDC",
-        address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU", // Mainnet USDC
-        image: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU/logo.png"
-    });
-
-    const handleSwap = (fromAmount, fromToken, toToken, slippage) => {
-        // Implement your swap logic here
-        console.log("Swap initiated:", { fromAmount, fromToken, toToken, slippage });
-        // Perform actual on-chain swap actions as needed
-    };
-
-    return (
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets} autoConnect>
-                <NotificationProvider>
-                    <ModalProvider>
-                        <Router>
-                            <div className="flex h-screen bg-black text-white">
-                                <SidePanel isOpen={isSidePanelOpen} onClose={() => setIsSidePanelOpen(false)} />
-
-                                <div className={`flex flex-col flex-grow transition-all duration-300 ${isSidePanelOpen ? "ml-72" : "ml-0"}`}>
-                                    <Header toggleSidePanel={() => setIsSidePanelOpen((prev) => !prev)} />
-                                    <MobileNavBar toggleSidePanel={() => setIsSidePanelOpen((prev) => !prev)} />
-
-                                    <main className="p-4 flex flex-col items-center bg-pattern bg-cover bg-center gap-y-6 min-h-0 h-full overflow-auto">
-                                        <Routes>
-                                            <Route
-                                                path="/"
-                                                element={
-                                                    <SwapCard
-                                                        onSwap={handleSwap}
-                                                        fromToken={fromToken}
-                                                        setFromToken={setFromToken}
-                                                        toToken={toToken}
-                                                        setToToken={setToToken}
-                                                    />
-                                                }
-                                            />
-                                            <Route path="/pools" element={<PoolsPage />} />
-                                            <Route path="/create-pool" element={<CreatePool />} />
-                                            <Route path="/transaction-history" element={<TransactionHistoryWrapper />} />
-                                        </Routes>
-                                    </main>
-                                </div>
-                            </div>
-                        </Router>
-                    </ModalProvider>
-                </NotificationProvider>
-            </WalletProvider>
-        </ConnectionProvider>
-    );
+  return (
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={wallets} autoConnect>
+        <NotificationProvider>
+          <ModalProvider>
+            <Router>
+              <AppLayout>
+                <Routes>
+                  <Route
+                    path="/home"
+                    element={
+                      <SwapCard
+                        onSwap={handleSwap}
+                        fromToken={fromToken}
+                        setFromToken={setFromToken}
+                        toToken={toToken}
+                        setToToken={setToToken}
+                      />
+                    }
+                  />
+                  <Route path="/pools" element={<PoolsPage />} />
+                  <Route path="/create-pool" element={<CreatePool />} />
+                  <Route
+                    path="/transaction-history"
+                    element={
+                      <TransactionHistoryWrapper
+                        walletAddress={useWallet().publicKey?.toBase58()}
+                        connection={useConnection().connection}
+                      />
+                    }
+                  />
+                  <Route path="/PlatformInfo" element={<PlatformInfo />} />
+                  <Route path="/TokenCreation" element={<TokenCreation />} />
+                </Routes>
+              </AppLayout>
+            </Router>
+          </ModalProvider>
+        </NotificationProvider>
+      </WalletProvider>
+    </ConnectionProvider>
+  );
 };
 
 export default App;

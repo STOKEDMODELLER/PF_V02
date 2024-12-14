@@ -1,0 +1,65 @@
+// styles.scss
+@import "variables";
+
+// Global styles
+body {
+  background-color: $primary-bg;
+  color: $text-primary;
+  font-family: $font-primary;
+  margin: 0;
+}
+
+// Reusable classes
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-base;
+  padding: $spacing-small $spacing-medium;
+  border-radius: $radius-medium;
+  background: linear-gradient(to bottom, $btn-gradient-start, $btn-gradient-end);
+  color: $text-primary;
+  box-shadow: $shadow-base;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: $btn-hover;
+    filter: brightness($hover-brightness);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px $btn-focus;
+  }
+}
+
+// Utility classes
+.bg-gradient {
+  background: linear-gradient(to bottom, $btn-gradient-start, $btn-gradient-end);
+}
+
+.border {
+  border: 1px solid $border-color;
+}
+
+.rounded {
+  border-radius: $radius-medium;
+}
+// Card Style
+.card {
+  background: linear-gradient(to bottom, $primary-bg, $secondary-bg);
+  border: 1px solid $border-color;
+  border-radius: $radius-medium;
+  box-shadow: $shadow-base;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: $spacing-medium;
+  margin: $spacing-small 0;
+  color: $text-primary;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $shadow-hover;
+  }
+}
